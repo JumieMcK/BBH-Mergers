@@ -40,7 +40,7 @@ class power_gaussian(bilby.core.prior.Prior):
 
 prior_power_gaussian = power_gaussian(name="name", mu = 35, mu2 = 70, sigma = np.sqrt(10), sigma2 = np.sqrt(100), alpha = 0.31, beta = -0.06, gamma = 0.1, minimum = 0.00001, maximum = 120)
 
-# this is range of x values (mass) going from just above 0 to 120 solar masses
+# this is range of x values (mass) going up to 120 solar masses
 
 x, dx = np.linspace(prior_power_gaussian.minimum, prior_power_gaussian.maximum, 1000, retstep=True)
 
@@ -52,8 +52,10 @@ y_i = prior_power_gaussian.prob(np.linspace(prior_power_gaussian.minimum, prior_
 
 cdf = np.cumsum(y_i * dx)
 
-  
+'''
 # finding the inverse cdf through interpolation
+# update: not sure y_array will work for rescale as the rescale requires 2 positional arguments, usually 'self' and 'val' in examples. 
+# Trying to use the y_array as the rescale was where the IndexError was occuring.
 
 from scipy.interpolate import InterpolatedUnivariateSpline
 
@@ -79,7 +81,7 @@ y_array = np.array([])
 for i in np.arange(prior_power_gaussian.minimum, 1,0.001):
     y_new = np.interp(i, x_dense, y_dense)
     y_array = np.append(y_array, y_new)
-
+'''
     
 # now want to define a class with the prior probabilities and the inverse cdf values for the rescale
 
@@ -99,16 +101,18 @@ class power_gaussian2(bilby.core.prior.Prior):
         self.sigma2 = sigma2
         self.beta = beta
         self.gamma = gamma
-        self.xx = xx
-        self.yy = yy
+        self.xx = xx # this will be the x values for the interpolated function i.e mass range
+        self.yy = yy # this will be the y values for the interpolated function i.e the normalised probability values
         self.inverse_cumulative_distribution = None
-
-    # would like the rescale to be the array of inverse cdf values calculated numerically
-    # rescale requires two positional arguments
-    
+ 
+ 
     def _initialize_attributes(self):
-        self.inverse_cumulative_distribution = interp1d(self.yy, self.xx, kind = 'linear')
-    
+        self.YY = cumtrapz(self._yy, self.xx, initial=0)
+        # Need last element of cumulative distribution to be exactly one.
+        self.YY[-1] = 1
+        self.inverse_cumulative_distribution = interp1d(self.YY, self.xx, kind = 'linear')
+        
+
     def rescale(self,val):
         """
         'Rescale' a sample from the unit line element to the prior.
@@ -131,11 +135,11 @@ class power_gaussian2(bilby.core.prior.Prior):
 
 # Inputting values for the parameters 
 
+prior_power_gaussian2 = power_gaussian2(name="name", mu = 35, mu2 = 70, sigma = np.sqrt(10), sigma2 = np.sqrt(100), alpha = 0.31, beta = -0.06, gamma = 0.1, xx = x, yy = y_i,  minimum = 0.00001, maximum = 120)
 
-prior_power_gaussian2 = power_gaussian2(name="name", mu = 35, mu2 = 70, sigma = np.sqrt(10), sigma2 = np.sqrt(100), alpha = 0.31, beta = -0.06, gamma = 0.1, xx = x, yy = cdf,  minimum = 0.00001, maximum = 120)
 
-
-# Injecting parameters
+# Injecting parameters - the code below is taken from a Bilby example to try and run the sampling on practice data
+# The only changes made are on lines 206 - 207 where I have replaced the standard mass prior with my own
 
 duration = 4
 sampling_frequency =  2048
@@ -199,7 +203,6 @@ _ = ifos.inject_signal(
 priors = bilby.gw.prior.BBHPriorDict(injection_parameters.copy())
 
 # Using the new prior for masses
-
 
 priors["mass_1"] = prior_power_gaussian2
 priors["mass_2"] = prior_power_gaussian2
