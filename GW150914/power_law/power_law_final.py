@@ -50,48 +50,8 @@ class exp_PowerLaw(bilby.core.prior.Prior):
         
 
         
-prior = exp_PowerLaw(name="name", alpha = 0.31, beta = -0.06, mu = 35, sigma = np.sqrt(5), minimum = 0.0001, maximum = 120) 
+prior = exp_PowerLaw(name="name", alpha = 0.31, beta = -0.06, mu = 25, sigma = np.sqrt(5), minimum = 0.0001, maximum = 120) 
 
-
-
-x1 = np.linspace(prior.minimum, prior.maximum, 1000)
-x2 = np.linspace(80, prior.maximum, 1000)
-x3 = [*x1, *x2]
-
-xi = np.asarray(x3)
-
-#ma_xi = np.ma.masked_inside(xi, 20, 30)
-
-
-plt.figure(figsize=(12,5))
-plt.hist(prior.sample(100000), bins=100, histtype = "step", density = True)
-if not isinstance(prior, bilby.core.prior.Gaussian):
-        plt.plot(
-            x1,
-    prior.prob(x1),
-) 
-
-else:
-    plt.plot(np.linspace(-5, 5, 1000), prior.prob(np.linspace(-5, 5, 1000)))
-
-plt.xlabel("{}".format(prior.latex_label))
-plt.show()
-plt.savefig('power_law_test/bpl_base.jpg')
-
-
-
-      
-c = -3
-l = 1
-p = (c*(x1-50)**(l)) + np.interp(50,x1,prior.prob(x1))
-
-slope, intercept = np.polyfit(p, x1, 1)
-
-
-    
-
-plt.plot(x1,p)
-plt.savefig("power_law_test/comp_powerlaw.png")
     
 class broken_PowerLaw(bilby.core.prior.Prior):
     
@@ -117,77 +77,20 @@ class broken_PowerLaw(bilby.core.prior.Prior):
                                  ((self.maximum-50) ** (1 + self.phi) - 
                                   (self.minimum-50) ** (1 + self.phi))) * self.is_in_prior_range(val) + np.interp(50,x1,prior.prob(x1))
     
-        
-print(np.interp(50,x1,prior.prob(x1)))
-print(intercept)
-print(slope)
 
-    
-prior_2 = broken_PowerLaw(name="name", alpha = 0.31, beta = -0.06, phi=1,  mu = 35, sigma = np.sqrt(5), epsilon = -1, minimum = 0.0001, maximum = 120) 
+prior_2 = broken_PowerLaw(name="name", alpha = 0.31, beta = -0.06, phi=1,  mu = 25, sigma = np.sqrt(5), epsilon = -1, minimum = 0.0001, maximum = 120) 
 
+x1 = np.linspace(prior_2.minimum, prior_2.maximum, 1000)
 f_val = np.array([prior_2.prob_2(val) for val in x1]) 
 
 f_val_pos = f_val[f_val>=0]
 
-#print(f_val_pos)
-
-plt.figure(figsize=(12,5))
-plt.plot(np.linspace(prior.minimum, prior.maximum, len(f_val_pos)), f_val_pos, label = r"factor $=$ 500, phi $=$ 1")
-plt.xlabel("{}".format(prior_2.latex_label))
-plt.legend(fontsize=10)
-plt.show()
-plt.savefig("power_law_test/pl_test.png")
-
-
-plt.figure(figsize=(12,5))
-#plt.hist(prior_2.sample(100000), bins=100, histtype = "step", density = True)
-if not isinstance(prior_2, bilby.core.prior.Gaussian):
-        plt.plot(
-            x1,
-             f_val, label = r"factor $=$ 500, phi $=$ 1"
-        )
-else:
-    plt.plot(np.linspace(-5, 5, 1000), prior_2.prob_2(np.linspace(-5, 5, 1000)))
-
-plt.xlabel("{}".format(prior_2.latex_label))
-plt.ylim(0,150)
-plt.legend(fontsize=10)
-plt.show()
-plt.savefig("power_law_test/v17_ebpg.png")
-
-
-
-plt.figure(figsize=(12,5))
-#plt.hist(prior_2.sample(100000), bins=100, histtype = "step", density = True)
-if not isinstance(prior_2, bilby.core.prior.Gaussian):
-        plt.plot(
-            np.linspace(prior_2.minimum, prior_2.maximum, len(f_val_pos)),
-             f_val_pos, label = r"factor $=$ 500, phi $=$ 1"
-        )
-else:
-    plt.plot(np.linspace(-5, 5, 1000), prior_2.prob_2(np.linspace(-5, 5, 1000)))
-
-plt.xlabel("{}".format(prior_2.latex_label))
-plt.ylim(0,150)
-plt.legend(fontsize=10)
-plt.show()
-plt.savefig("power_law_test/pos_graph.png")
 
 # to get truncated change val - 50 to val - intercept
 #plt.savefig("scripts_bp/truncated.png")
 
 x, dx = np.linspace(prior_2.minimum, prior_2.maximum, len(f_val_pos), retstep=True)
 y_i = f_val_pos / np.sum(dx * f_val_pos)
-
-plt.figure(figsize=(12,5))
-plt.plot(np.linspace(prior_2.minimum, prior_2.maximum, len(f_val_pos)), y_i, label = r"factor $=$ 500, phi $=$ 1")
-plt.xlabel("{}".format(prior_2.latex_label))
-plt.legend(fontsize=10)
-plt.show()
-plt.savefig("power_law_test/normalised.png")
-
-# Only keep the positive y data
-# Next step is to normalise the y data and then use this as well as x data for interpolation
 
 class Interped(bilby.core.prior.Prior):
 
@@ -362,111 +265,5 @@ class Interped(bilby.core.prior.Prior):
         self.inverse_cumulative_distribution = interp1d(x=self.YY, y=self.xx, bounds_error=False)
 
 # inputting values for interpolated function (xx and yy already contain the values for alpha, beta etc.)        
-prior_int = Interped(xx = x,  yy = y_i, minimum = 0.0001, maximum = 120)
+prior_int = Interped(xx = x,  yy = y_i, minimum = 2, maximum = 120)
 
-
-plt.figure(figsize=(12,5))
-plt.hist(prior_int.sample(100000), bins=100, histtype="step", density=True)
-plt.plot(x,  prior_int.prob(np.linspace(prior_int.minimum, prior_int.maximum, len(f_val_pos))))
-plt.xlabel("{}".format(prior_2.latex_label)) 
-plt.show()
-plt.savefig('power_law_test/prob.jpg')
-
-plt.figure(figsize=(12,5))
-plt.hist(prior_int.sample(100000), bins=100, histtype="step", density=True)
-plt.plot(np.linspace(0,1,len(f_val_pos)),  prior_int.rescale(np.linspace(0, 1, len(f_val_pos))))
-plt.xlabel("{}".format(prior_2.latex_label)) 
-plt.show()
-plt.savefig('power_law_test/res.jpg')
-
-# Injecting parameters
-
-duration = 4
-sampling_frequency =  2048
-outdir = "power_law_test"
-label = "power_law"
-
-injection_parameters = dict(
-	mass_1 = 36.0,
-	mass_2 = 29.0,
-	a_1 = 0.4,
-	a_2 = 0.3,
-	tilt_1 = 0.5,
-	tilt_2 = 1.0,
-	phi_12 = 1.7,
-	phi_jl = 0.3,
-	luminosity_distance = 1000.0,
-	theta_jn = 0.4,
-	phase = 1.3,
-	ra = 1.375,
-	dec = -1.2108,
-	geocent_time = 1126259542.413,
-	psi = 2.659,
-)
-
-
-# Defining the waveform arguments
-
-waveform_arguments = dict(
-	waveform_approximant = "IMRPhenomXP",
-	reference_frequency = 50.0,
-)
-
-# Defining the waveform generator
-
-waveform_generator = bilby.gw.waveform_generator.WaveformGenerator(
-	sampling_frequency = sampling_frequency,
-	duration = duration,
-	frequency_domain_source_model = bilby.gw.source.lal_binary_black_hole,
-	parameters = injection_parameters,
-	waveform_arguments = waveform_arguments,
-)
-
-
-# Setting up interferometers
-
-ifos = bilby.gw.detector.InterferometerList(["H1", "L1"])
-ifos.set_strain_data_from_power_spectral_densities(
-	duration=duration,
-	sampling_frequency = sampling_frequency,
-	start_time = injection_parameters["geocent_time"] - 2,
-)
-
-_ = ifos.inject_signal(
-	waveform_generator = waveform_generator, parameters = injection_parameters
-)
-
-# Define priors as a delta function at a particular value,
-# then manually change the mass and luminosity distance prior
-
-
-priors = bilby.gw.prior.BBHPriorDict(injection_parameters.copy())
-
-
-priors["mass_1"] = prior_int
-priors["mass_2"] = prior_int
-priors["luminosity_distance"] = bilby.core.prior.Uniform(400, 2000, "luminosity_distance")
-
-
-
-# Calculating Likelihood
-
-likelihood = bilby.gw.likelihood.GravitationalWaveTransient(
-	interferometers = ifos, waveform_generator = waveform_generator)
-	
-    
-
-# Obtaining results
-
-result = bilby.core.sampler.run_sampler(
-	likelihood = likelihood,
-	priors = priors,
-	sampler = "dynesty",
-	npoints = 100,
-	injection_parameters = injection_parameters,
-	outdir = outdir,
-	label = label,
-	walks = 5,
-	nact = 2,
-)
-result.plot_corner()
