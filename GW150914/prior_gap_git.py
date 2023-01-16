@@ -9,6 +9,7 @@ from scipy.integrate import cumtrapz
 from scipy.interpolate import InterpolatedUnivariateSpline
 from scipy.interpolate import UnivariateSpline
 from bilby.core.utils import check_directory_exists_and_if_not_mkdir
+from scipy.interpolate import interp1d
 
 outdir_bp = "prior_peak_plus_gap"
 check_directory_exists_and_if_not_mkdir(outdir_bp)
