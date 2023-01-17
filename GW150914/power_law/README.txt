@@ -1,0 +1,1 @@
+This contains the files to run Graeme prior for the power law on GW150914 event. Code was submitted to Wiay on 16/01/23. Results should be available on the Wiay server in the directory /data/wiay/undergrads/project781/GW150914/PowerLaw/
