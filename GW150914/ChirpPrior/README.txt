@@ -1,0 +1,1 @@
+Code used to to submit Sagi's Chirp Mass prior on GW150914. Code was submitted to Wiay on 10/1/23. Due to some issues the results were sent to my jupyterhub but have been uploaded to the project teams channel
