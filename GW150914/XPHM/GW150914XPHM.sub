@@ -1,0 +1,14 @@
+# My virutal Enviroment has been set up on the wiay server
+executable = /data/wiay/undergrads/2324304m/VirtualEnv/bin/python3
+arguments  = GW150914XPHM.py
+
+# My output directories. I use a bash script to make these
+output = /data/wiay/undergrads/project781/GW150914/XPHM/out/out.txt
+error  = /data/wiay/undergrads/project781/GW150914/XPHM/error/error.txt
+log    = /data/wiay/undergrads/project781/GW150914/XPHM/log/log.txt
+
+#The default computing power requested but can be increased
+request_cpus   = 4
+request_memory = 1024
+
+queue
