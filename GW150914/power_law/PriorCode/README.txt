@@ -1,0 +1,1 @@
+This prior consits of an exponential turn on in the population of black holes at small masses. There is a broken powerlaw with the change in the gradient of the function occuring at 50 solar masses, the lower edge of the upper mass gap. This prior also features a Gaussian peak at 35 solar masses, consistent with observations.
