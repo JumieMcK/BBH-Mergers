@@ -1,4 +1,0 @@
-The multiple_custom_priors file is an upgraded version of the code used to create the chirp mass prior object. 
-The code now instead can create multiple bilby priors from the dataset.
-It is accompanied by the respective txt files for each prior which include the value of the prior and also the probability density
-The priors this code creates are : "chirp mass prior","q prior", "chieff prior", "z prior", "m1 prior", "m2 prior".
