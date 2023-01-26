@@ -1,0 +1,38 @@
+from pesummary.io import read
+import json
+import matplotlib.pyplot as plt
+
+
+
+# loading in json files
+json_load_MP = read("GW150914MultiPeak_result.json", package="gw")
+json_load_PL = read("GW150914PowerLaw_result.json", package="gw")
+json_load_GP = read("GW150914GapPrior_result.json", package="gw")
+json_load_chirp = read("ChirpMass_result.json", package="gw")
+
+
+# creating dictionaries 
+samples_MP = json_load_MP.samples_dict
+samples_PL = json_load_PL.samples_dict
+samples_GP = json_load_GP.samples_dict
+samples_chirp = json_load_chirp.samples_dict
+
+# if you want to plot multiple histograms on the same plot can use ax = plt.gca() and then set ax = ax 
+ax = plt.gca()
+samples_MP.plot("chirp_mass", type="hist", kde=True, ax=ax, label='MP')
+samples_PL.plot("chirp_mass", type="hist", kde=True, ax=ax, color='red', label='PL')
+samples_GP.plot("chirp_mass", type="hist", kde=True, ax=ax, color='green', label='GP')
+samples_chirp.plot("chirp_mass", type="hist", kde=True, ax=ax, color='orange', label='chirp')
+plt.legend()
+plt.savefig("chirp_comp.png")
+
+
+
+# plotting a corner plot for mass_1 and mass_2
+fig = samples.plot(type="corner", parameters=["mass_1", "mass_2"])
+fig.savefig("PowerLaw_corner.png")
+
+
+# this is another way of doing a corner plot which looks quite clean
+fig2, _, _, _ = samples.plot(["mass_1", "mass_2"], type="triangle", smooth=4, fill_alpha=0.2)
+fig2.savefig("PowerLaw_triangle.png")
