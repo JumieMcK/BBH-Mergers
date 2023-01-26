@@ -1,0 +1,1 @@
+This is a folder to share ideas on visualising our results as well as the plots that we produce. PESummary is a useful tool for creating clean and professional looking plots, documentation can be found at https://docs.ligo.org/lscsoft/pesummary/unstable_docs/index.html
