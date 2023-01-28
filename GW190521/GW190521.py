@@ -13,8 +13,8 @@ label = "GW190521"
 # > datasets.event_gps("GW150914")
 trigger_time = datasets.event_gps("GW190521")
 detectors = ["H1", "L1","V1"]
-maximum_frequency = 1024 # multiply this by 2
-minimum_frequency = 10 # change this to 10 
+maximum_frequency = 1024 # changed this from 512 to 1024
+minimum_frequency = 10 # changed this to 10 
 roll_off = 0.4  # Roll off duration of tukey window in seconds, default is 0.4s
 duration = 4  # Analysis segment duration
 post_trigger_duration = 2  # Time between trigger time and end of segment
