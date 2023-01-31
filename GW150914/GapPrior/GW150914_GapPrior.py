@@ -299,8 +299,8 @@ class Interped(bilby.core.prior.Prior):
 # You can overwrite this using the syntax below in the file,
 # or choose a fixed value by just providing a float value as the prior.
 priors = bilby.gw.prior.BBHPriorDict("GapPrior.prior")
-priors["mass_1"] =  Interped(name="mass_1", xx = x,  yy = y_i, dx = dx, mu = 35, mu2 = 70, sigma = np.sqrt(10), sigma2 = np.sqrt(150), alpha = 0.31, beta = -0.06, gamma = 0.5, minimum = 10, maximum = 80)
-priors["mass_2"] = Interped(name="mass_2", xx = x,  yy = y_i, dx = dx, mu = 35, mu2 = 70, sigma = np.sqrt(10), sigma2 = np.sqrt(150), alpha = 0.31, beta = -0.06, gamma = 0.5, minimum = 10, maximum = 80)
+priors["mass_1"] =  Interped(name="mass_1", xx = x,  yy = y_i, dx = dx, mu = 35, mu2 = 70, sigma = np.sqrt(10), sigma2 = np.sqrt(150), alpha = 0.31, beta = -0.06, gamma = 0.5, minimum = 2, maximum = 120)
+priors["mass_2"] = Interped(name="mass_2", xx = x,  yy = y_i, dx = dx, mu = 35, mu2 = 70, sigma = np.sqrt(10), sigma2 = np.sqrt(150), alpha = 0.31, beta = -0.06, gamma = 0.5, minimum = 2, maximum = 120)
 
 
 # Add the geocent time prior
