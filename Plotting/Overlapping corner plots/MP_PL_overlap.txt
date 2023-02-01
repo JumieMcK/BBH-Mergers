@@ -1,0 +1,37 @@
+from pesummary.io import read
+import json
+import matplotlib.pyplot as plt
+
+# read in the json files
+json_load_MP = read("GW150914MultiPeak_result.json", package="gw")
+json_load_PL = read("GW150914PowerLaw_result.json", package="gw")
+
+# creating dictionary items
+samples_MP = json_load_MP.samples_dict
+samples_PL = json_load_PL.samples_dict
+
+# assign a variable for mass_1 and mass_2
+mass_1_MultiPeak = samples_MP["mass_1"]
+mass_2_MultiPeak = samples_MP["mass_2"]
+
+mass_1_PowerLaw = samples_PL["mass_1"]
+mass_2_PowerLaw = samples_PL["mass_2"]
+
+# this applies the constraint that m1 > m2
+for i in range(len(mass_1_MultiPeak)):
+    if mass_1_MultiPeak[i] < mass_2_MultiPeak[i]:
+            mass_2_MultiPeak[i],mass_1_MultiPeak[i] = mass_1_MultiPeak[i],mass_2_MultiPeak[i]
+            
+for i in range(len(mass_1_PowerLaw)):
+    if mass_1_PowerLaw[i] < mass_2_PowerLaw[i]:
+            mass_2_PowerLaw[i],mass_1_PowerLaw[i] = mass_1_PowerLaw[i],mass_2_PowerLaw[i]
+            
+
+# this corner plot will include both mass components and the chirp mass
+# in order for the plots to overlap in this example use fig=figure 
+figure = samples_MP.plot(type="corner", parameters=["mass_1", "mass_2", "chirp_mass"], label='MP')
+samples_PL.plot(type="corner", parameters=["mass_1", "mass_2", "chirp_mass"], label='PL', color='red', fig=figure)
+plt.legend()
+# I've plotted the MP and PL priors with m1 greater than m2
+plt.savefig("MP_PL_m1_gr_m2.png")
+
