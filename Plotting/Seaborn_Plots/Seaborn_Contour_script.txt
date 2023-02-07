@@ -2,7 +2,7 @@ ax=plt.gca()
 plt.fill_between(x,y, np.max(y), zorder=2.5, color='tab:gray')
 # we can control the contours plotted using levels
 # if we want a contour at the 68% and 95% confidence interval, we set levels = [0.05,0.32]
-sns.kdeplot(mass_1_MultiPeak_arr, mass_2_MultiPeak_arr, alpha=1, levels = [0.05, 0.32], thresh = 0.2, color="blue", label = 'MultiPeak')
+sns.kdeplot(mass_1_MultiPeak_arr, mass_2_MultiPeak_arr, alpha=1, levels = [0.05, 0.32], color="blue", label = 'MultiPeak')
 plt.grid(False)
 ax.patch.set_facecolor('white')
 plt.xlim(30,50)
